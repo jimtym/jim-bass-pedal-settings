@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Jim's Smooth Jazz Bass Board Settings</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #070b10;
+      --card-bg: #111722;
+      --card-border: #242b39;
+      --accent: #4fd1c5;
+      --accent-soft: rgba(79, 209, 197, 0.12);
+      --text: #f7fafc;
+      --text-muted: #a0aec0;
+      --table-header-bg: #1f2933;
+      --table-row-alt: #151b26;
+      --sansamp-color: #f6ad55;
+      --cali-color: #63b3ed;
+      --chorus-color: #9f7aea;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 1rem;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
+      background: radial-gradient(circle at top, #1a202c 0, #020309 55%);
+      color: var(--text);
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    header h1 {
+      font-size: 1.5rem;
+      margin: 0 0 0.25rem;
+      letter-spacing: 0.04em;
+    }
+
+    header p {
+      margin: 0.25rem 0;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.7rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 0.4rem;
+    }
+
+    .pill-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: var(--accent);
+    }
+
+    .pedal-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    @media (min-width: 880px) {
+      .pedal-grid {
+        flex-direction: row;
+        align-items: stretch;
+      }
+    }
+
+    .pedal-card {
+      flex: 1 1 0;
+      border-radius: 14px;
+      border: 1px solid var(--card-border);
+      background: linear-gradient(145deg, #0b111b, #05070c);
+      padding: 0.85rem 0.85rem 1rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .pedal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 0.25rem;
+    }
+
+    .pedal-name {
+      font-weight: 600;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .pedal-tag {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+    }
+
+    .pedal-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      flex-shrink: 0;
+    }
+
+    .pedal-sub {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    thead { background: var(--table-header-bg); }
+
+    th,
+    td {
+      padding: 0.25rem 0.35rem;
+      text-align: left;
+      border-bottom: 1px solid #1a202c;
+    }
+
+    th {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+    }
+
+    tbody tr:nth-child(odd) {
+      background: #0d131c;
+    }
+
+    tbody tr:nth-child(even) {
+      background: var(--table-row-alt);
+    }
+
+    .knob-cell {
+      text-align: center;
+      padding: 0.2rem 0.1rem;
+    }
+
+    /* Fixed knob: white/gray face, black tick, 12:00 = straight up */
+    .knob-face {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #f7fafc 0, #cbd5e0 45%, #a0aec0 100%);
+      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.6),
+                  0 1px 0 rgba(255, 255, 255, 0.05);
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .knob-face::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 12%;
+      width: 2px;
+      height: 40%;
+      background: #111;
+      border-radius: 999px;
+      transform-origin: 50% 100%;
+      /* 0deg = straight up; we rotate from there */
+      transform: translateX(-50%) rotate(var(--knob-rotation, 0deg));
+    }
+
+    .setting-text {
+      white-space: nowrap;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .footer-note {
+      margin-top: 1rem;
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <div class="pill">
+        <span class="pill-dot"></span>
+        Jim's Smooth Jazz P-Bass Board
+      </div>
+      <h1>Live Bass Pedal Settings</h1>
+      <p>Passive P-Bass · Fingerstyle · Smooth jazz / pop · Subtle chorus</p>
+      <p style="font-size:0.8rem; color:var(--text-muted);">
+        Knobs shown as clock positions (6:30 = minimum, 5:30 = maximum).
+      </p>
+    </header>
+
+    <section class="pedal-grid">
+      <!-- SansAmp -->
+      <article class="pedal-card">
+        <div class="pedal-header">
+          <div class="pedal-name">
+            <span class="pedal-dot" style="background: var(--sansamp-color);"></span>
+            SansAmp Bass Driver DI
+          </div>
+          <div class="pedal-tag">Preamp · Warmth</div>
+        </div>
+        <div class="pedal-sub">
+          Clean, warm DI tone with gentle tube-style sheen. Core of the sound.
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Control</th>
+              <th>Setting</th>
+              <th style="text-align:center;">Knob</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Level</td>
+              <td><span class="setting-text">12:00</span></td>
+              <td class="knob-cell"><div class="knob-face" data-clock="12:00"></div></td>
+            </tr>
+            <tr>
+              <td>Blend</td>
+              <td><span class="setting-text">11:30</span></td>
+              <td class="knob-cell"><div class="knob-face" data-clock="11:30"></div></td>
+            </tr>
+            <tr>
+              <td>Treble</td>
+              <td><span class="setting-text">10:30</span></td>
+              <td class="knob-cell"><div class="knob-face" data-clock="10:30"></div></td>
+            </tr>
+            <tr>
+              <td>Presence</td>
+              <td><span class="setting-text">9:30</span></td>
+              <td class="knob-cell"><div class="knob-face" data-clock="9:30"></div></td>
+            </tr>
+            <tr>
+              <td>Drive</td>
+              <td><span class="setting-text">9:30</span></td>
+              <td class="knob-cell"><div class="knob-face" data-clock="9:30"></div></td>
+            </tr>
+            <tr>
+              <td>Bass</td>
+              <td><span class="setting-text">1:00</span></td>
+              <td class="knob-cell"><div class="knob-face" data-clock="1:00"></div></td>
+            </tr>
+            <tr>
+              <td>Mid</td>
+              <td><span class="setting-text">12:00</span></td>
+              <td class="knob-cell"><div class="knob-face" data-clock="12:00"></div></td>
+            </tr>
+            <tr>
+              <td>Mid Shift</td>
+              <td><span class="setting-text">500 Hz</span></td>
+              <td class="knob-cell">Button: 500 Hz</td>
+            </tr>
+          </tbody>
+        </table>
+      </article>
+
+      <!-- Cali76 -->
+      <article class="pedal-card">
+        <div class="pedal-header">
+          <div class="pedal-name">
+            <span class="pedal-dot" style="background: var(--cali-color);"></span>
+            Cali76 Compact Bass
+          </div>
+          <div class="pedal-tag">Compression</div>
+        </div>
+        <div class="pedal-sub">
+          Studio-style smoothing: even dynamics, natural feel, no pumping.
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Control</th>
+              <th>Setting</th>
+              <th style="text-align:center;">Knob</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Dry</td>
+              <td><span class="setting-text">1:00</span></td>
+              <td class="knob-cell"><div class="knob-face" data-clock="1:00"></div></td>
+            </tr>
+            <tr>
+              <td>Out</td>
+              <td><span class="setting-text">12:00</span></td>
+              <td class="knob-cell"><div class="knob-face" data-clock="12:00"></div></td>
+            </tr>
+            <tr>
+              <td>In</td>
+              <td><span class="setting-text">11:00</span></td>
+              <td class="knob-cell"><div class="knob-face" data-clock="11:00"></div></td>
+            </tr>
+            <tr>
+              <td>Ratio</td>
+              <td><span class="setting-text">1:00</span> (≈4–6:1)</td>
+              <td class="knob-cell"><div class="knob-face" data-clock="1:00"></div></td>
+            </tr>
+            <tr>
+              <td>Attack / Release</td>
+              <td><span class="setting-text">12:00</span></td>
+              <td class="knob-cell"><div class="knob-face" data-clock="12:00"></div></td>
+            </tr>
+            <tr>
+              <td>HPF</td>
+              <td><span class="setting-text">11:00</span></td>
+              <td class="knob-cell"><div class="knob-face" data-clock="11:00"></div></td>
+            </tr>
+          </tbody>
+        </table>
+      </article>
+
+      <!-- Chorus -->
+      <article class="pedal-card">
+        <div class="pedal-header">
+          <div class="pedal-name">
+            <span class="pedal-dot" style="background: var(--chorus-color);"></span>
+            MXR Bass Chorus Deluxe
+          </div>
+          <div class="pedal-tag">Chorus · Shimmer</div>
+        </div>
+        <div class="pedal-sub">
+          Subtle, warm shimmer on mids/highs. X-Over keeps low end solid.
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Control</th>
+              <th>Setting</th>
+              <th style="text-align:center;">Knob</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Bass</td>
+              <td><span class="setting-text">12:00</span></td>
+              <td class="knob-cell"><div class="knob-face" data-clock="12:00"></div></td>
+            </tr>
+            <tr>
+              <td>Treble</td>
+              <td><span class="setting-text">10:30</span></td>
+              <td class="knob-cell"><div class="knob-face" data-clock="10:30"></div></td>
+            </tr>
+            <tr>
+              <td>Intensity</td>
+              <td><span class="setting-text">9:30</span></td>
+              <td class="knob-cell"><div class="knob-face" data-clock="9:30"></div></td>
+            </tr>
+            <tr>
+              <td>Rate</td>
+              <td><span class="setting-text">9:00</span></td>
+              <td class="knob-cell"><div class="knob-face" data-clock="9:00"></div></td>
+            </tr>
+            <tr>
+              <td>Width</td>
+              <td><span class="setting-text">10:30</span></td>
+              <td class="knob-cell"><div class="knob-face" data-clock="10:30"></div></td>
+            </tr>
+            <tr>
+              <td>X-Over</td>
+              <td><span class="setting-text">ON</span></td>
+              <td class="knob-cell">Button: ON</td>
+            </tr>
+            <tr>
+              <td>Flanger</td>
+              <td><span class="setting-text">OFF</span></td>
+              <td class="knob-cell">Button: OFF</td>
+            </tr>
+          </tbody>
+        </table>
+      </article>
+    </section>
+
+    <div class="footer-note">
+      Tuning &amp; signal chain: Tuner → Drop → Cali76 → Chorus → SansAmp → Amp/DI.
+    </div>
+  </div>
+
+  <script>
+    // 12:00 = straight up (0deg), 3:00 = 90deg, 6:00 = 180deg, 9:00 = 270deg
+    function clockToDeg(clock) {
+      const [hStr, mStr = "0"] = clock.split(":");
+      const h = (parseInt(hStr, 10) || 0) % 12;
+      const m = parseInt(mStr, 10) || 0;
+      const t = h + m / 60; // 0–12
+      return t * 30;        // 360° / 12 = 30° per hour
+    }
+
+    document.querySelectorAll(".knob-face[data-clock]").forEach((el) => {
+      const clock = el.getAttribute("data-clock");
+      const deg = clockToDeg(clock);
+      el.style.setProperty("--knob-rotation", deg + "deg");
+    });
+  </script>
+</body>
+</html>
