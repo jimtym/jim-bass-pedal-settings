@@ -1,0 +1,28 @@
+{
+  "data-source": {
+    "database-type": "mssql",
+    "connection-string": "@env('DB_CONNECTION')"
+  },
+  "runtime": {
+    "rest": {
+      "enabled": true,
+      "path": "/api"
+    }
+  },
+  "entities": {
+    "PedalSettings": {
+      "source": "PedalSettings",
+      "permissions": [
+        {
+          "role": "anonymous",
+          "actions": [
+            "read",
+            "create",
+            "update",
+            "delete"
+          ]
+        }
+      ]
+    }
+  }
+}
